@@ -1,0 +1,15 @@
+# node files
+node_modules
+
+#bower components
+bower_components
+
+# sass cache files
+.sass-cache
+
+# coverage reports
+coverage
+results.xml
+
+# App folder is for production only
+app

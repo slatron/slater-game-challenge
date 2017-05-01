@@ -1,0 +1,53 @@
+// Wrapper
+// ======================
+.wrapper {
+  max-width: $wrapper-width;
+  margin: 0 auto;
+}
+
+// Header
+// ======================
+.welcome-msg {
+  @extend %text-normal;
+
+  color: $color-royal;
+  margin-left: $base-unit;
+  padding: 0;
+  font-family: $base-font-family;
+}
+
+.header-left {
+  float: left;
+  width: 50%;
+}
+
+.header-right {
+  float: right;
+  text-align: right;
+  width: 50%;
+}
+
+header a {
+  text-decoration: none;
+}
+
+// Navigation
+// =========================
+.nav-search {
+  margin-left: 10px;
+  width: 400px;
+}
+
+.main-nav {
+  clear: both;
+}
+
+// Main
+// =============================
+main {}
+
+.page-load {
+  font-weight: bold;
+  height: 100vh;
+  padding: 20px;
+}
