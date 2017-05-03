@@ -7,8 +7,8 @@
     <span ng-class="{'hidden': !box.played}">X</span>
   </div>
   <div class="controls">
-    <span ng-click="rowVM.decrementPlaycount()">-</span>
+    <span ng-click="rowVM.decrementPlaycount(rowVM.game.id)">-</span>
     /
-    <span ng-click="rowVM.incrementPlaycount()">+</span>
+    <span ng-click="rowVM.incrementPlaycount(rowVM.game.id)">+</span>
   </div>
 </div>

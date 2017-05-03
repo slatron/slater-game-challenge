@@ -18,16 +18,16 @@ directive('gridRow', function(
     controller: function($scope) {
       var vm = this;
 
-      vm.decrementPlaycount = decrementPlaycount;
-      vm.incrementPlaycount = incrementPlaycount;
+      vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
+      vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
 
       vm.boxes = [];
       _generateBoxes();
 
       $scope.$watch(function() {
         return vm.game;
-      }, function(newVal, oldVal) {
-        if (newVal && (newVal.played !== oldVal.played)) {
+      }, function(newVal) {
+        if (newVal) {
           _generateBoxes();
         }
       });
@@ -37,18 +37,6 @@ directive('gridRow', function(
         _.times(vm.times, function(idx) {
           vm.boxes.push({played: vm.game.played > idx});
         });
-      }
-
-      function incrementPlaycount() {
-        if (vm.game.played < 5) {
-          firebaseFactory.incrementPlaycount(vm.game.id);
-        }
-      }
-
-      function decrementPlaycount() {
-        if (vm.game.played > 0) {
-          firebaseFactory.decrementPlaycount(vm.game.id);
-        }
       }
     }
   };
