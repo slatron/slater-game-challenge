@@ -1,10 +1,6 @@
 angular.module('Challenge').
-factory('firebaseFactory', function(
-  $timeout,
-  $firebaseObject) {
-
+factory('firebaseFactory', function($firebaseObject) {
   var methods = {};
-
   var ref = firebase.database().ref();
   var challengeObject = $firebaseObject(ref);
 

@@ -1,14 +1,24 @@
-<div class="game-grid">
+<div class="game-grid grid-padded">
+  <div ng-include="'templates/login.html'"></div>
+  <error-messages
+    messages="gridVM.messages"
+  ></error-messages>
   <h4>
-    Slater <span ng-bind="gridVM.challenge.data.times"></span>x10 Challenge
     <button
-      ng-click="gridVM.editMode = !gridVM.editMode"
-      class="but-small"
-    >
-       <span ng-show="gridVM.editMode">done editing</span>
-       <span ng-hide="gridVM.editMode">edit</span>
-    </button>
+      ng-if="!gridVM.status.authorized"
+      ng-click="gridVM.showLogin = !gridVM.showLogin"
+      class="but-small float-right"
+    >Login</button>
+
+    <button
+      ng-if="gridVM.status.authorized"
+      ng-click="gridVM.logout()"
+      class="but-small float-right"
+    >Logout</button>
+
+    Slater <span ng-bind="gridVM.challenge.data.times"></span>x10 Challenge
   </h4>
+
   <grid-row
     ng-repeat="(id, game) in gridVM.challenge.data"
     ng-if="id !== 'times'"

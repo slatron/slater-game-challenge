@@ -1,5 +1,6 @@
 angular.module('Challenge').
 directive('gridRow', function(
+  firebaseAuthFactory,
   firebaseFactory,
   pathsData) {
   'use strict';
@@ -17,6 +18,8 @@ directive('gridRow', function(
     ].join(''),
     controller: function($scope) {
       var vm = this;
+
+      vm.status = firebaseAuthFactory.getStatus();
 
       vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
       vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
