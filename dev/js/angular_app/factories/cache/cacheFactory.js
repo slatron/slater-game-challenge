@@ -3,7 +3,7 @@
 *    directives to store API response data
 *    for further calls on the page
 */
-angular.module('Cardgame').
+angular.module('Challenge').
 factory('cacheFactory', function() {
 
   var pageCache = {},

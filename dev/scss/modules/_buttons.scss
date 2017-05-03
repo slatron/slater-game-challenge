@@ -87,9 +87,9 @@ a.but-selection {
   @extend %but;
   background: $color-royal;
   color: $color-white;
-  padding: $base-unit-half $base-unit;
+  padding: $base-unit-quarter $base-unit-half;
   min-width: 10px;
-  font-size: $base-unit;
+  font-size: 10px;
 
   &.active,
   &:active {

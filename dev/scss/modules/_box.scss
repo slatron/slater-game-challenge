@@ -1,0 +1,27 @@
+.box {
+  @extend .vertical-align-container;
+  border: 1px solid $color-black;
+  height: $base-unit*3;
+  margin: $base-unit-quarter;
+  overflow-y: hidden;
+  padding: $base-unit-half;
+  width: $base-unit*3;
+  text-align: center;
+}
+
+.game-title {
+  padding: $base-unit-half;
+  width: 200px;
+
+  display: flex;
+  align-items: center;
+}
+
+.controls {
+  @extend .vertical-align-container;
+  > span {
+    @extend %text-large;
+    cursor: pointer;
+    padding: $base-unit-half;
+  }
+}

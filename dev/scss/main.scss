@@ -9,8 +9,8 @@
 @import 'base/mixins';
 @import 'base/normalize';
 @import 'base/fonts';
-@import 'base/base';
 @import 'base/typography';
+@import 'base/base';
 
 // Layout Stylesheets
 @import 'layout/layout';
@@ -24,6 +24,8 @@
 @import 'modules/grid';
 @import 'modules/show-grid';
 @import 'modules/window-shade';
+
+@import 'modules/box';
 
 // State Stylesheets
 @import 'state/state';

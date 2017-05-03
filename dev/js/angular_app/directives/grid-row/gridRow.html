@@ -1,0 +1,14 @@
+<div class="grid grid-row">
+  <div class="game-title" ng-bind="::rowVM.game.title"></div>
+  <div
+    ng-repeat="box in rowVM.boxes track by $index"
+    class="box"
+  >
+    <span ng-class="{'hidden': !box.played}">X</span>
+  </div>
+  <div class="controls">
+    <span ng-click="rowVM.decrementPlaycount()">-</span>
+    /
+    <span ng-click="rowVM.incrementPlaycount()">+</span>
+  </div>
+</div>

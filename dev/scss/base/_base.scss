@@ -9,6 +9,7 @@ html {
 }
 
 html, body {
+  @extend %text-normal;
   color: $color-black;
 }
 

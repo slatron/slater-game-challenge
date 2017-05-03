@@ -1,4 +1,5 @@
-angular.module('Cardgame', [
+angular.module('Challenge', [
+  'firebase',
   'ngSanitize',
   'ngCookies'])
 .config(function(

@@ -1,0 +1,18 @@
+<div class="game-grid">
+  <h4>
+    Slater <span ng-bind="gridVM.challenge.data.times"></span>x10 Challenge
+    <button
+      ng-click="gridVM.editMode = !gridVM.editMode"
+      class="but-small"
+    >
+       <span ng-show="gridVM.editMode">done editing</span>
+       <span ng-hide="gridVM.editMode">edit</span>
+    </button>
+  </h4>
+  <grid-row
+    ng-repeat="(id, game) in gridVM.challenge.data"
+    ng-if="id !== 'times'"
+    game="game"
+    times="gridVM.challenge.data.times"
+  ></grid-row>
+</div>

@@ -1,9 +1,9 @@
 <!doctype html>
-<html ng-app="Cardgame" ng-strict-di>
+<html ng-app="Challenge" ng-strict-di>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
-    <title>Cardgame Test</title>
+    <title>Slater 5x10 Boardgame Challenge</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="assets/css/main.min.css">
@@ -11,24 +11,22 @@
 
   <body>
     <div class="wrapper">
-      <draft-board></draft-board>
+      <game-grid></game-grid>
     </div>
     <script src="assets/js/main.js"></script>
-    <!-- Firebase | Uncomment when ready to develop 2-player remote -->
-    <!-- TODO: Authentication -->
-    <!-- TODO: Move to node -->
-    <!-- <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
     <script>
       // Initialize Firebase
       var config = {
-        apiKey: "AIzaSyBxGnjfAWZKaMtcXM5by3b13RC0RBaRmN8",
-        authDomain: "cardgame-774db.firebaseapp.com",
-        databaseURL: "https://cardgame-774db.firebaseio.com",
-        projectId: "cardgame-774db",
-        storageBucket: "cardgame-774db.appspot.com",
-        messagingSenderId: "478829036690"
+        apiKey: "AIzaSyDR9at_rJgkb2JP5aUBO4qWdy19NoOmLrw",
+        authDomain: "slater-game-challenge.firebaseapp.com",
+        databaseURL: "https://slater-game-challenge.firebaseio.com",
+        projectId: "slater-game-challenge",
+        storageBucket: "slater-game-challenge.appspot.com",
+        messagingSenderId: "701085873805"
       };
       firebase.initializeApp(config);
-    </script> -->
+    </script>
   </body>
 </html>

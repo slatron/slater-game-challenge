@@ -1,30 +1,21 @@
-angular.module('Cardgame').
-factory('firebaseFactory', function() {
-  var db = firebase.database();
+angular.module('Challenge').
+factory('firebaseFactory', function(
+  $firebaseObject) {
+
   var methods = {};
+  var ref = firebase.database().ref();
+  var challengeObject = $firebaseObject(ref);
 
-  methods.setData = function(location, object) {
-    if (!location) {
-      return false;
-    } else if (_.isObject(object)) {
-      db.ref(location).set(object);
-    } else {
-      db.ref(location).set({
-        data: object
-      });
-    }
+  methods.followFirebaseRootObject = function() {
+    return challengeObject;
   };
 
-  methods.readDataOnce = function(location) {
-    return db.ref(location).once('value');
+  methods.incrementPlaycount = function(gameId) {
+    challengeObject.data[gameId].played = challengeObject.data[gameId].played + 1;
   };
 
-  methods.followData = function(location, handler) {
-    return db.ref(location).on('value', handler);
-  };
-
-  methods.unfollowData = function(location) {
-    return db.ref(location).off();
+  methods.decrementPlaycount = function(gameId) {
+    challengeObject.data[gameId].played = challengeObject.data[gameId].played - 1;
   };
 
   return methods;

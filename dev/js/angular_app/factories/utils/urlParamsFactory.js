@@ -1,7 +1,7 @@
 /**
  *  This factory is used to get/set URL params and strings
  **/
-angular.module('Cardgame').
+angular.module('Challenge').
 factory('urlParamsFactory', function() {
   var methods   = {};
   var urlParams = {}; // store params after first check

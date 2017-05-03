@@ -1,7 +1,7 @@
 /**
  *   Helper methods for manipuating data structures missing from _
  **/
-angular.module('Cardgame').
+angular.module('Challenge').
 factory('dataUtilFactory', function() {
   var methods = {};
 

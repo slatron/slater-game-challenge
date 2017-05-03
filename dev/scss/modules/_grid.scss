@@ -2,11 +2,9 @@
 // ======================
 .grid {
   display: flex;
-
   &.grid-wrap {
     flex-wrap: wrap;
   }
-
 }
 
 .grid-full {
@@ -84,36 +82,4 @@
   flex-grow: 1;
   flex-shrink: 1;
   width: 16.5%;
-}
-
-// See the styleguide icons section for an example
-.grid-definition-chart {
-
-  border-bottom: 1px solid $color-ltgrey;
-  border-right: 1px solid $color-ltgrey;
-
-  dl {
-    background: $color-ltltgrey;
-    border-top: 1px solid $color-ltgrey;
-    border-left: 1px solid $color-ltgrey;
-    margin-bottom: 0;
-    width: 10%;
-
-    &:last-child {
-      border-right: 1px solid $color-ltgrey;
-    }
-  }
-
-  dt {
-    @extend %text-extralg;
-    background: $color-white;
-    text-align: center;
-    padding: $base-unit;
-  }
-
-  dd {
-    @extend .description;
-
-    padding: $base-unit;
-  }
 }
