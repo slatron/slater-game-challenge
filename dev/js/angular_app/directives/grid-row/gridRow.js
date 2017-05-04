@@ -31,11 +31,9 @@ directive('gridRow', function(
       _generateBoxes();
 
       $scope.$watch(function() {
-        return vm.game;
-      }, function(newVal) {
-        if (newVal) {
-          _generateBoxes();
-        }
+        return vm.game.played;
+      }, function() {
+        _generateBoxes();
       });
 
       function _generateBoxes() {
