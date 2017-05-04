@@ -1,0 +1,33 @@
+<div class="grid grid-row">
+  <div class="game-title"
+    ng-bind="rowVM.game.title"
+    ng-click="rowVM.enterEditTitleMode()"
+    ng-class="{'hand': rowVM.status.authorized}"
+    ng-show="!rowVM.editTitleMode"
+  ></div>
+  <div
+    ng-show="rowVM.editTitleMode"
+    class="game-title game-title-edit"
+  >
+    <input
+      ng-model="rowVM.game.title"
+      ng-change="rowVM.updateTitle()"
+      ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 1000, 'blur': 0 } }"
+    >
+  </div>
+
+  <div
+    ng-repeat="box in rowVM.boxes track by $index"
+    class="box"
+  >
+    <span ng-class="{'hidden': !box.played}">X</span>
+  </div>
+  <div
+    ng-if="rowVM.status.authorized"
+    class="controls"
+  >
+    <span ng-click="rowVM.decrementPlaycount(rowVM.game.id)">-</span>
+    /
+    <span ng-click="rowVM.incrementPlaycount(rowVM.game.id)">+</span>
+  </div>
+</div>

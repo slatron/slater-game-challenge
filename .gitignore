@@ -7,9 +7,10 @@ bower_components
 # sass cache files
 .sass-cache
 
-# coverage reports
-coverage
-results.xml
-
-# App folder is for production only
-app
+gulp
+tests
+gulpfile.js
+package.json
+units.conf.js
+.jscsrc
+dev

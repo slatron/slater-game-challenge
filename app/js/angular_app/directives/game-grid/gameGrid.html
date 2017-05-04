@@ -1,0 +1,32 @@
+<div class="game-grid grid-padded">
+  <div ng-include="'templates/login.html'"></div>
+  <error-messages
+    messages="gridVM.messages"
+  ></error-messages>
+
+  <span class="text-tiny float-right align-right" ng-if="gridVM.status.authorized">
+    Logged in as <span ng-bind="gridVM.status.email"></span>
+    <br>
+    <button
+      ng-if="gridVM.status.authorized"
+      ng-click="gridVM.logout()"
+      class="but-small"
+    >Logout</button>
+  </span>
+
+  <h4>
+    <button
+      ng-if="!gridVM.status.authorized"
+      ng-click="gridVM.showLogin = !gridVM.showLogin"
+      class="but-small float-right"
+    >Login</button>
+    Slater <span ng-bind="gridVM.challenge.data.times"></span>x10 Challenge
+  </h4>
+
+  <grid-row
+    ng-repeat="(id, game) in gridVM.challenge.data"
+    ng-if="id !== 'times'"
+    game="game"
+    times="gridVM.challenge.data.times"
+  ></grid-row>
+</div>
