@@ -12752,6 +12752,40 @@ constant('progressData', {
 });
 
 angular.module('Challenge').
+directive('errorMessages', ["pathsData", function(pathsData) {
+  'use strict';
+
+  return {
+    restrict: 'E',
+    scope: {
+      messages: '=',
+    },
+    controllerAs: 'errorMessagesVM',
+    bindToController: true,
+    replace: true,
+    templateUrl: [
+      pathsData.directives,
+      'error-messages/errorMessages.html'
+    ].join(''),
+
+    controller: ["$scope", function($scope) {
+      var vm = this;
+      vm.dismiss = dismiss;
+
+      $scope.$watchCollection(angular.bind(vm.messages, function() {
+        return vm.messages;
+      }), function(newVal) {
+        vm.messages = _.uniq(newVal);
+      });
+
+      function dismiss() {
+        vm.messages = [];
+      }
+    }],
+  };
+}]);
+
+angular.module('Challenge').
 directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
   firebaseAuthFactory,
   firebaseFactory,
@@ -12841,8 +12875,10 @@ directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", fu
       pathsData.directives,
       'game-grid/gameGrid.html'
     ].join(''),
-    controller: ["$timeout", function($timeout) {
+    controller: ["$scope", function($scope) {
       var vm = this;
+      vm.board     = undefined;
+      vm.boardData = firebaseFactory.getBoardData();
       vm.challenge = firebaseFactory.followFirebaseRootObject();
       vm.showLogin = false;
       vm.login     = login;
@@ -12853,6 +12889,22 @@ directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", fu
         email: '',
         password: ''
       };
+
+      $scope.$watch(function() {
+        return vm.boardData.selected;
+      }, function(newVal) {
+        if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
+          vm.board = vm.challenge[newVal];
+        }
+      });
+
+      $scope.$watch(function() {
+        return vm.challenge[vm.boardData.selected];
+      }, function(newVal) {
+        if (newVal) {
+          vm.board = newVal;
+        }
+      });
 
       function login() {
         firebaseAuthFactory.login(vm.user.email, vm.user.password)
@@ -12937,6 +12989,73 @@ factory('cacheFactory', function() {
 });
 
 angular.module('Challenge').
+factory('challengeFactory', function() {
+
+  var methods = {};
+
+  return methods;
+});
+
+angular.module('Challenge').
+directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
+  firebaseAuthFactory,
+  firebaseFactory,
+  pathsData) {
+  'use strict';
+  return {
+    replace: true,
+    scope: {
+      game: '=',
+      times: '='
+    },
+    controllerAs: 'rowVM',
+    bindToController: true,
+    templateUrl: [
+      pathsData.directives,
+      'grid-row/gridRow.html'
+    ].join(''),
+    controller: ["$scope", function($scope) {
+      var vm = this;
+
+      vm.status = firebaseAuthFactory.getStatus();
+
+      vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
+      vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
+      vm.enterEditTitleMode = enterEditTitleMode;
+      vm.updateTitle = updateTitle;
+
+      vm.editTitleMode = false;
+      vm.boxes = [];
+      _generateBoxes();
+
+      $scope.$watch(function() {
+        return vm.game.played;
+      }, function() {
+        _generateBoxes();
+      });
+
+      function _generateBoxes() {
+        vm.boxes = [];
+        _.times(vm.times, function(idx) {
+          vm.boxes.push({played: vm.game.played > idx});
+        });
+      }
+
+      function enterEditTitleMode() {
+        if (vm.status.authorized) {
+          vm.editTitleMode = true;
+        }
+      }
+
+      function updateTitle() {
+        firebaseFactory.saveData();
+        vm.editTitleMode = false;
+      }
+    }]
+  };
+}]);
+
+angular.module('Challenge').
 factory('firebaseAuthFactory', ["$firebaseAuth", function($firebaseAuth) {
   var methods = {};
   var firebaseAuthObject = $firebaseAuth();
@@ -12983,6 +13102,20 @@ factory('firebaseFactory', ["$firebaseObject", function($firebaseObject) {
   var methods = {};
   var ref = firebase.database().ref();
   var challengeObject = $firebaseObject(ref);
+  var boardData = {
+    options: ['-- SELECT BOARD --', 'family', 'parents'],
+    selected: '-- SELECT BOARD --'
+  };
+
+  methods.getBoardData = function() {
+    return boardData;
+  };
+
+  methods.selectBoard = function(board) {
+    if (boardData.options.indexOf(board) > -1) {
+      boardData.selected = board;
+    }
+  };
 
   methods.followFirebaseRootObject = function() {
     return challengeObject;
@@ -12993,15 +13126,17 @@ factory('firebaseFactory', ["$firebaseObject", function($firebaseObject) {
   };
 
   methods.incrementPlaycount = function(gameId) {
-    if (challengeObject.data[gameId].played < challengeObject.data.times) {
-      challengeObject.data[gameId].played = challengeObject.data[gameId].played + 1;
+    if (challengeObject[boardData.selected][gameId].played < challengeObject[boardData.selected].times) {
+      challengeObject[boardData.selected][gameId].played =
+        challengeObject[boardData.selected][gameId].played + 1;
       methods.saveData();
     }
   };
 
   methods.decrementPlaycount = function(gameId) {
-    if (challengeObject.data[gameId].played > 0) {
-      challengeObject.data[gameId].played = challengeObject.data[gameId].played - 1;
+    if (challengeObject[boardData.selected][gameId].played > 0) {
+      challengeObject[boardData.selected][gameId].played =
+        challengeObject[boardData.selected][gameId].played - 1;
       methods.saveData();
     }
   };
@@ -13113,109 +13248,6 @@ factory('urlParamsFactory', function() {
     sanitizedURL = location + urlParams;
     return sanitizedURL;
   };
-
-  return methods;
-});
-
-angular.module('Challenge').
-directive('errorMessages', ["pathsData", function(pathsData) {
-  'use strict';
-
-  return {
-    restrict: 'E',
-    scope: {
-      messages: '=',
-    },
-    controllerAs: 'errorMessagesVM',
-    bindToController: true,
-    replace: true,
-    templateUrl: [
-      pathsData.directives,
-      'error-messages/errorMessages.html'
-    ].join(''),
-
-    controller: ["$scope", function($scope) {
-      var vm = this;
-      vm.dismiss = dismiss;
-
-      $scope.$watchCollection(angular.bind(vm.messages, function() {
-        return vm.messages;
-      }), function(newVal) {
-        vm.messages = _.uniq(newVal);
-      });
-
-      function dismiss() {
-        vm.messages = [];
-      }
-    }],
-  };
-}]);
-
-angular.module('Challenge').
-directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
-  firebaseAuthFactory,
-  firebaseFactory,
-  pathsData) {
-  'use strict';
-  return {
-    replace: true,
-    scope: {
-      game: '=',
-      times: '='
-    },
-    controllerAs: 'rowVM',
-    bindToController: true,
-    templateUrl: [
-      pathsData.directives,
-      'grid-row/gridRow.html'
-    ].join(''),
-    controller: ["$scope", function($scope) {
-      var vm = this;
-
-      vm.status = firebaseAuthFactory.getStatus();
-
-      vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
-      vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
-      vm.enterEditTitleMode = enterEditTitleMode;
-      vm.updateTitle = updateTitle;
-
-      vm.editTitleMode = false;
-      vm.boxes = [];
-      _generateBoxes();
-
-      $scope.$watch(function() {
-        return vm.game;
-      }, function(newVal) {
-        if (newVal) {
-          _generateBoxes();
-        }
-      });
-
-      function _generateBoxes() {
-        vm.boxes = [];
-        _.times(vm.times, function(idx) {
-          vm.boxes.push({played: vm.game.played > idx});
-        });
-      }
-
-      function enterEditTitleMode() {
-        if (vm.status.authorized) {
-          vm.editTitleMode = true;
-        }
-      }
-
-      function updateTitle() {
-        firebaseFactory.saveData();
-        vm.editTitleMode = false;
-      }
-    }]
-  };
-}]);
-
-angular.module('Challenge').
-factory('challengeFactory', function() {
-
-  var methods = {};
 
   return methods;
 });
