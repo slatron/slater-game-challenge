@@ -15,21 +15,16 @@ directive('gameGrid', function(
     ].join(''),
     controller: function($timeout) {
       var vm = this;
-
-      vm.showLogin  = false;
-      vm.login      = login;
-      vm.logout     = logout;
-      vm.messages   = [];
-
-      vm.status = firebaseAuthFactory.getStatus();
-
-      vm.error = '';
-      vm.user = {
+      vm.challenge = firebaseFactory.followFirebaseRootObject();
+      vm.showLogin = false;
+      vm.login     = login;
+      vm.logout    = logout;
+      vm.messages  = [];
+      vm.status    = firebaseAuthFactory.getStatus();
+      vm.user      = {
         email: '',
         password: ''
       };
-
-      vm.challenge = firebaseFactory.followFirebaseRootObject();
 
       function login() {
         firebaseAuthFactory.login(vm.user.email, vm.user.password)

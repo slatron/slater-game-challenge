@@ -23,7 +23,10 @@ directive('gridRow', function(
 
       vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
       vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
+      vm.enterEditTitleMode = enterEditTitleMode;
+      vm.updateTitle = updateTitle;
 
+      vm.editTitleMode = false;
       vm.boxes = [];
       _generateBoxes();
 
@@ -40,6 +43,17 @@ directive('gridRow', function(
         _.times(vm.times, function(idx) {
           vm.boxes.push({played: vm.game.played > idx});
         });
+      }
+
+      function enterEditTitleMode() {
+        if (vm.status.authorized) {
+          vm.editTitleMode = true;
+        }
+      }
+
+      function updateTitle() {
+        firebaseFactory.saveData();
+        vm.editTitleMode = false;
       }
     }
   };

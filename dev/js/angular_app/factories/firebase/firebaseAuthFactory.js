@@ -3,16 +3,19 @@ factory('firebaseAuthFactory', function($firebaseAuth) {
   var methods = {};
   var firebaseAuthObject = $firebaseAuth();
   var status = {
-    authorized: false
+    authorized: false,
+    email: ''
   };
 
   firebaseAuthObject.$onAuthStateChanged(function(user) {
     if (user) {
       console.log(' ** USER is authorized **');
       status.authorized = true;
+      status.email = user.email;
     } else {
       console.log(' ** USER Signed out **');
       status.authorized = false;
+      status.email = '';
     }
   });
 
@@ -28,6 +31,10 @@ factory('firebaseAuthFactory', function($firebaseAuth) {
 
   methods.logout = function() {
     return firebaseAuthObject.$signOut();
+  };
+
+  methods.registerUser = function(email, password) {
+    return firebaseAuthObject.$createUserWithEmailAndPassword(email, password);
   };
 
   return methods;

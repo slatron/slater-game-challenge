@@ -3,19 +3,23 @@
   <error-messages
     messages="gridVM.messages"
   ></error-messages>
+
+  <span class="text-tiny float-right align-right" ng-if="gridVM.status.authorized">
+    Logged in as <span ng-bind="gridVM.status.email"></span>
+    <br>
+    <button
+      ng-if="gridVM.status.authorized"
+      ng-click="gridVM.logout()"
+      class="but-small"
+    >Logout</button>
+  </span>
+
   <h4>
     <button
       ng-if="!gridVM.status.authorized"
       ng-click="gridVM.showLogin = !gridVM.showLogin"
       class="but-small float-right"
     >Login</button>
-
-    <button
-      ng-if="gridVM.status.authorized"
-      ng-click="gridVM.logout()"
-      class="but-small float-right"
-    >Logout</button>
-
     Slater <span ng-bind="gridVM.challenge.data.times"></span>x10 Challenge
   </h4>
 
