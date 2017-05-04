@@ -13,8 +13,10 @@ directive('gameGrid', function(
       pathsData.directives,
       'game-grid/gameGrid.html'
     ].join(''),
-    controller: function($timeout) {
+    controller: function($scope) {
       var vm = this;
+      vm.board     = undefined;
+      vm.boardData = firebaseFactory.getBoardData();
       vm.challenge = firebaseFactory.followFirebaseRootObject();
       vm.showLogin = false;
       vm.login     = login;
@@ -25,6 +27,22 @@ directive('gameGrid', function(
         email: '',
         password: ''
       };
+
+      $scope.$watch(function() {
+        return vm.boardData.selected;
+      }, function(newVal) {
+        if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
+          vm.board = vm.challenge[newVal];
+        }
+      });
+
+      $scope.$watch(function() {
+        return vm.challenge[vm.boardData.selected];
+      }, function(newVal) {
+        if (newVal) {
+          vm.board = newVal;
+        }
+      });
 
       function login() {
         firebaseAuthFactory.login(vm.user.email, vm.user.password)
