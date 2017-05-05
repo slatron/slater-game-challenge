@@ -9,7 +9,7 @@ factory('firebaseAuthFactory', function($firebaseAuth) {
 
   firebaseAuthObject.$onAuthStateChanged(function(user) {
     if (user) {
-      console.log(' ** USER is authorized **');
+      console.log(' ** USER is authorized **', user);
       status.authorized = true;
       status.email = user.email;
     } else {
@@ -35,6 +35,10 @@ factory('firebaseAuthFactory', function($firebaseAuth) {
 
   methods.registerUser = function(email, password) {
     return firebaseAuthObject.$createUserWithEmailAndPassword(email, password);
+  };
+
+  methods.updateEmail = function(email) {
+    return firebaseAuthObject.$sendPasswordResetEmail(email);
   };
 
   return methods;

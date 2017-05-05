@@ -16,31 +16,6 @@
   clear: both;
 }
 
-// Generic column classes
-.grid-col-full {
-  width: 100%;
-}
-
-//   use grid-col-even for arbitrary number of even-width columns
-.grid-col-even {
-  flex-grow: 1;
-  flex-shrink: 0;
-  width: 50%;
-
-  &.grid-grow {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  &.grid-shrink {
-    flex-shrink: 1;
-    flex-grow: 0;
-    overflow: hidden;
-    width: 0;
-  }
-
-}
-
 // ================================================================
 // Mobile single-col grid handling
 // ================================================================
@@ -58,28 +33,10 @@
 }
 // ================================================================
 
-// Use these together for 1/3 | 2/3 columns
-.grid-col-double {
-  flex-grow: 2;
-  flex-shrink: 0;
-  width: 66%;
+.grid-col-single {
+  flex-grow: 1;
 }
 
-.grid-col-half {
-  flex-grow: 1;
-  flex-shrink: 1;
-  width: 33%;
-}
-
-.grid-col-fifth {
-  flex-grow: 1;
-  flex-shrink: 1;
-  width: 20%;
-}
-
-// Smaller solo form row
-.grid-col-quarter {
-  flex-grow: 1;
-  flex-shrink: 1;
-  width: 16.5%;
+.grid-col-triple {
+  flex-grow: 3;
 }
