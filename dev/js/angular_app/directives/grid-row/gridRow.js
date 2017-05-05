@@ -8,7 +8,8 @@ directive('gridRow', function(
     replace: true,
     scope: {
       game: '=',
-      times: '='
+      times: '=',
+      players: '='
     },
     controllerAs: 'rowVM',
     bindToController: true,
@@ -21,12 +22,16 @@ directive('gridRow', function(
 
       vm.status = firebaseAuthFactory.getStatus();
 
-      vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
-      vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
-      vm.enterEditTitleMode = enterEditTitleMode;
-      vm.updateTitle = updateTitle;
+      vm.decrementPlaycount  = firebaseFactory.decrementPlaycount;
+      vm.incrementPlaycount  = firebaseFactory.incrementPlaycount;
+      vm.enterEditTitleMode  = enterEditTitleMode;
+      vm.enterEditPlayerMode = enterEditPlayerMode;
+      vm.updateTitle         = updateTitle;
+      vm.updatePlayer        = updatePlayer;
+      vm.gotoPlayed          = gotoPlayed;
 
-      vm.editTitleMode = false;
+      vm.editTitleMode  = false;
+      vm.editPlayerMode = false;
       vm.boxes = [];
       _generateBoxes();
 
@@ -49,9 +54,26 @@ directive('gridRow', function(
         }
       }
 
+      function gotoPlayed(times) {
+        if (vm.status.authorized) {
+          firebaseFactory.setGameTimes(vm.game.id, times);
+        }
+      }
+
+      function enterEditPlayerMode() {
+        if (vm.status.authorized) {
+          vm.editPlayerMode = true;
+        }
+      }
+
       function updateTitle() {
         firebaseFactory.saveData();
         vm.editTitleMode = false;
+      }
+
+      function updatePlayer() {
+        firebaseFactory.saveData();
+        vm.editPlayerMode = false;
       }
     }
   };

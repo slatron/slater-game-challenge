@@ -3,9 +3,14 @@ factory('firebaseFactory', function($firebaseObject) {
   var methods = {};
   var ref = firebase.database().ref();
   var challengeObject = $firebaseObject(ref);
+
   var boardData = {
     options: ['-- SELECT BOARD --', 'family', 'parents'],
     selected: '-- SELECT BOARD --'
+  };
+
+  methods.getPlayersData = function() {
+    return playersData;
   };
 
   methods.getBoardData = function() {
@@ -24,6 +29,11 @@ factory('firebaseFactory', function($firebaseObject) {
 
   methods.saveData = function() {
     challengeObject.$save();
+  };
+
+  methods.setGameTimes = function(gameId, times) {
+    challengeObject[boardData.selected][gameId].played = times;
+    methods.saveData();
   };
 
   methods.incrementPlaycount = function(gameId) {

@@ -9,7 +9,7 @@ factory('firebaseAuthFactory', function($firebaseAuth) {
 
   firebaseAuthObject.$onAuthStateChanged(function(user) {
     if (user) {
-      console.log(' ** USER is authorized **');
+      console.log(' ** USER is authorized **', user);
       status.authorized = true;
       status.email = user.email;
     } else {
