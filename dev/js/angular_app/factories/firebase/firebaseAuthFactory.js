@@ -37,5 +37,9 @@ factory('firebaseAuthFactory', function($firebaseAuth) {
     return firebaseAuthObject.$createUserWithEmailAndPassword(email, password);
   };
 
+  methods.updateEmail = function(email) {
+    return firebaseAuthObject.$sendPasswordResetEmail(email);
+  };
+
   return methods;
 });

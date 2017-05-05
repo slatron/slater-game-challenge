@@ -17,11 +17,7 @@
   >
     <h2>Actions:</h2>
     <div ng-click="adminVM.showRegister = !adminVM.showRegister" class="hand">Register User</div>
-    <!--
-      TODO:
-      <div ng-click="adminVM.openVerifyEmailForm()">Request Password Update</div>
-      <div ng-click="adminVM.openEditUserForm()">Add / Update User Info</div>
-    -->
+    <div ng-click="adminVM.showUpdateEmail = !adminVM.showUpdateEmail" class="hand">Request Password Update</div>
     <div ng-click="adminVM.openTimeForm()">
       <label for="times">Update Number of Games Played</label>
       <input
@@ -40,6 +36,7 @@
 
   <div ng-include="'templates/admin-register-user.html'"></div>
   <div ng-include="'templates/admin-login.html'"></div>
+  <div ng-include="'templates/admin-request-password-set.html'"></div>
   <error-messages
     messages="adminVM.messages"
   ></error-messages>
