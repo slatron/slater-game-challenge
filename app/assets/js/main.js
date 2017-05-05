@@ -12752,6 +12752,101 @@ constant('progressData', {
 });
 
 angular.module('Challenge').
+directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
+  firebaseAuthFactory,
+  firebaseFactory,
+  pathsData) {
+  'use strict';
+
+  return {
+    restrict: 'E',
+    scope: {},
+    controllerAs: 'adminVM',
+    bindToController: true,
+    replace: true,
+    templateUrl: [
+      pathsData.directives,
+      'admin-page/adminPage.html'
+    ].join(''),
+
+    controller: function() {
+      var vm = this;
+
+      vm.status          = firebaseAuthFactory.getStatus();
+      vm.challenge       = firebaseFactory.followFirebaseRootObject();
+      vm.showLogin       = false;
+      vm.showRegister    = false;
+      vm.showUpdateEmail = false;
+      vm.messages        = [];
+      vm.user            = {};
+      _resetUser();
+
+      vm.updateTimes  = updateTimes;
+      vm.updateEmail  = updateEmail;
+      vm.registerUser = registerUser;
+      vm.login        = login;
+      vm.logout       = logout;
+
+      function _resetUser() {
+        vm.user.email = '';
+        vm.user.password = '';
+      }
+
+      function updateTimes() {
+        vm.challenge.data.times = parseInt(vm.challenge.data.times);
+        firebaseFactory.saveData();
+      }
+
+      function updateEmail() {
+        firebaseAuthFactory.updateEmail(vm.user.email, vm.user.password)
+          .then(function() {
+            vm.messages.push('Password Update Email Sent!');
+          })
+          .catch(function(error) {
+            vm.messages.push(error);
+          })
+          .finally(function() {
+            vm.showUpdateEmail = false;
+            _resetUser();
+          });
+      }
+
+      function login() {
+        firebaseAuthFactory.login(vm.user.email, vm.user.password)
+          .catch(function(error) {
+            vm.messages.push(error);
+          })
+          .finally(function() {
+            vm.showLogin = false;
+            _resetUser();
+          });
+      }
+
+      function logout() {
+        firebaseAuthFactory.logout()
+          .catch(function(error) {
+            vm.messages.push(error);
+          });
+      }
+
+      function registerUser() {
+        firebaseAuthFactory.registerUser(vm.user.email, vm.user.password)
+        .then(function(user) {
+          vm.messages.push('created new user ', user.email);
+        })
+        .catch(function(error) {
+          vm.messages.push(error);
+        })
+        .finally(function() {
+          vm.showRegister = false;
+          _resetUser();
+        });
+      }
+    },
+  };
+}]);
+
+angular.module('Challenge').
 directive('errorMessages', ["pathsData", function(pathsData) {
   'use strict';
 
@@ -12782,81 +12877,6 @@ directive('errorMessages', ["pathsData", function(pathsData) {
         vm.messages = [];
       }
     }],
-  };
-}]);
-
-angular.module('Challenge').
-directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
-  firebaseAuthFactory,
-  firebaseFactory,
-  pathsData) {
-  'use strict';
-
-  return {
-    restrict: 'E',
-    scope: {},
-    controllerAs: 'adminVM',
-    bindToController: true,
-    replace: true,
-    templateUrl: [
-      pathsData.directives,
-      'admin-page/adminPage.html'
-    ].join(''),
-
-    controller: function() {
-      var vm = this;
-
-      vm.status       = firebaseAuthFactory.getStatus();
-      vm.challenge    = firebaseFactory.followFirebaseRootObject();
-      vm.showLogin    = false;
-      vm.showRegister = false;
-      vm.messages     = [];
-      vm.user         = {
-        email: '',
-        password: ''
-      };
-
-      vm.updateTimes      = updateTimes;
-      vm.registerUser     = registerUser;
-      vm.login            = login;
-      vm.logout           = logout;
-
-      function updateTimes() {
-        vm.challenge.data.times = parseInt(vm.challenge.data.times);
-        firebaseFactory.saveData();
-      }
-
-      function login() {
-        firebaseAuthFactory.login(vm.user.email, vm.user.password)
-          .catch(function(error) {
-            vm.messages.push(error);
-          })
-          .finally(function() {
-            vm.showLogin = false;
-          });
-      }
-
-      function logout() {
-        firebaseAuthFactory.logout()
-          .catch(function(error) {
-            vm.messages.push(error);
-          });
-      }
-
-      function registerUser() {
-        firebaseAuthFactory.registerUser(vm.user.email, vm.user.password)
-        .then(function(user) {
-          console.log(user);
-          vm.messages.push('created new user ', user.email);
-        })
-        .catch(function(error) {
-          vm.messages.push(error);
-        })
-        .finally(function() {
-          vm.showRegister = false;
-        });
-      }
-    },
   };
 }]);
 
@@ -12921,6 +12941,87 @@ directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", fu
           .catch(function(error) {
             vm.messages.push(error);
           });
+      }
+    }]
+  };
+}]);
+
+angular.module('Challenge').
+directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
+  firebaseAuthFactory,
+  firebaseFactory,
+  pathsData) {
+  'use strict';
+  return {
+    replace: true,
+    scope: {
+      game: '=',
+      times: '=',
+      players: '='
+    },
+    controllerAs: 'rowVM',
+    bindToController: true,
+    templateUrl: [
+      pathsData.directives,
+      'grid-row/gridRow.html'
+    ].join(''),
+    controller: ["$scope", function($scope) {
+      var vm = this;
+
+      vm.status = firebaseAuthFactory.getStatus();
+
+      vm.decrementPlaycount  = firebaseFactory.decrementPlaycount;
+      vm.incrementPlaycount  = firebaseFactory.incrementPlaycount;
+      vm.enterEditTitleMode  = enterEditTitleMode;
+      vm.enterEditPlayerMode = enterEditPlayerMode;
+      vm.updateTitle         = updateTitle;
+      vm.updatePlayer        = updatePlayer;
+      vm.gotoPlayed          = gotoPlayed;
+
+      vm.editTitleMode  = false;
+      vm.editPlayerMode = false;
+      vm.boxes = [];
+      _generateBoxes();
+
+      $scope.$watch(function() {
+        return vm.game.played;
+      }, function() {
+        _generateBoxes();
+      });
+
+      function _generateBoxes() {
+        vm.boxes = [];
+        _.times(vm.times, function(idx) {
+          vm.boxes.push({played: vm.game.played > idx});
+        });
+      }
+
+      function enterEditTitleMode() {
+        if (vm.status.authorized) {
+          vm.editTitleMode = true;
+        }
+      }
+
+      function gotoPlayed(times) {
+        if (vm.status.authorized) {
+          firebaseFactory.setGameTimes(vm.game.id, times);
+        }
+      }
+
+      function enterEditPlayerMode() {
+        if (vm.status.authorized) {
+          vm.editPlayerMode = true;
+        }
+      }
+
+      function updateTitle() {
+        firebaseFactory.saveData();
+        vm.editTitleMode = false;
+      }
+
+      function updatePlayer() {
+        firebaseFactory.saveData();
+        vm.editPlayerMode = false;
       }
     }]
   };
@@ -12997,65 +13098,6 @@ factory('challengeFactory', function() {
 });
 
 angular.module('Challenge').
-directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
-  firebaseAuthFactory,
-  firebaseFactory,
-  pathsData) {
-  'use strict';
-  return {
-    replace: true,
-    scope: {
-      game: '=',
-      times: '='
-    },
-    controllerAs: 'rowVM',
-    bindToController: true,
-    templateUrl: [
-      pathsData.directives,
-      'grid-row/gridRow.html'
-    ].join(''),
-    controller: ["$scope", function($scope) {
-      var vm = this;
-
-      vm.status = firebaseAuthFactory.getStatus();
-
-      vm.decrementPlaycount = firebaseFactory.decrementPlaycount;
-      vm.incrementPlaycount = firebaseFactory.incrementPlaycount;
-      vm.enterEditTitleMode = enterEditTitleMode;
-      vm.updateTitle = updateTitle;
-
-      vm.editTitleMode = false;
-      vm.boxes = [];
-      _generateBoxes();
-
-      $scope.$watch(function() {
-        return vm.game.played;
-      }, function() {
-        _generateBoxes();
-      });
-
-      function _generateBoxes() {
-        vm.boxes = [];
-        _.times(vm.times, function(idx) {
-          vm.boxes.push({played: vm.game.played > idx});
-        });
-      }
-
-      function enterEditTitleMode() {
-        if (vm.status.authorized) {
-          vm.editTitleMode = true;
-        }
-      }
-
-      function updateTitle() {
-        firebaseFactory.saveData();
-        vm.editTitleMode = false;
-      }
-    }]
-  };
-}]);
-
-angular.module('Challenge').
 factory('firebaseAuthFactory', ["$firebaseAuth", function($firebaseAuth) {
   var methods = {};
   var firebaseAuthObject = $firebaseAuth();
@@ -13066,7 +13108,7 @@ factory('firebaseAuthFactory', ["$firebaseAuth", function($firebaseAuth) {
 
   firebaseAuthObject.$onAuthStateChanged(function(user) {
     if (user) {
-      console.log(' ** USER is authorized **');
+      console.log(' ** USER is authorized **', user);
       status.authorized = true;
       status.email = user.email;
     } else {
@@ -13094,6 +13136,10 @@ factory('firebaseAuthFactory', ["$firebaseAuth", function($firebaseAuth) {
     return firebaseAuthObject.$createUserWithEmailAndPassword(email, password);
   };
 
+  methods.updateEmail = function(email) {
+    return firebaseAuthObject.$sendPasswordResetEmail(email);
+  };
+
   return methods;
 }]);
 
@@ -13102,9 +13148,14 @@ factory('firebaseFactory', ["$firebaseObject", function($firebaseObject) {
   var methods = {};
   var ref = firebase.database().ref();
   var challengeObject = $firebaseObject(ref);
+
   var boardData = {
     options: ['-- SELECT BOARD --', 'family', 'parents'],
     selected: '-- SELECT BOARD --'
+  };
+
+  methods.getPlayersData = function() {
+    return playersData;
   };
 
   methods.getBoardData = function() {
@@ -13123,6 +13174,11 @@ factory('firebaseFactory', ["$firebaseObject", function($firebaseObject) {
 
   methods.saveData = function() {
     challengeObject.$save();
+  };
+
+  methods.setGameTimes = function(gameId, times) {
+    challengeObject[boardData.selected][gameId].played = times;
+    methods.saveData();
   };
 
   methods.incrementPlaycount = function(gameId) {

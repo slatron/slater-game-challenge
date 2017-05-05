@@ -1,5 +1,19 @@
 <div class="grid grid-row">
-  <div class="game-title"
+  <div class="grid-col-single vertical-align-container color-{{rowVM.game.player}}">
+    <span
+      ng-click="rowVM.enterEditPlayerMode()"
+      ng-bind="rowVM.game.player || '-'"
+      ng-show="!rowVM.editPlayerMode"
+    ></span>
+    <select
+      ng-show="rowVM.editPlayerMode"
+      ng-model="rowVM.game.player"
+      ng-change="rowVM.updatePlayer()"
+      ng-options="player for player in rowVM.players"
+    ></select>
+  </div>
+
+  <div class="game-title grid-col-triple color-{{rowVM.game.player}}"
     ng-bind="rowVM.game.title"
     ng-click="rowVM.enterEditTitleMode()"
     ng-class="{'hand': rowVM.status.authorized}"
@@ -7,7 +21,7 @@
   ></div>
   <div
     ng-show="rowVM.editTitleMode"
-    class="game-title game-title-edit"
+    class="game-title grid-col-triple color-{{rowVM.game.player}}"
   >
     <input
       ng-model="rowVM.game.title"
@@ -18,16 +32,22 @@
 
   <div
     ng-repeat="box in rowVM.boxes track by $index"
-    class="box"
+    ng-click="rowVM.gotoPlayed($index + 1)"
+    class="box grid-col-single"
   >
     <span ng-class="{'hidden': !box.played}">X</span>
   </div>
   <div
     ng-if="rowVM.status.authorized"
-    class="controls"
+    class="controls grid-col-single"
   >
-    <span ng-click="rowVM.decrementPlaycount(rowVM.game.id)">-</span>
-    /
-    <span ng-click="rowVM.incrementPlaycount(rowVM.game.id)">+</span>
+    <span
+      ng-click="rowVM.decrementPlaycount(rowVM.game.id)"
+      class="but-small"
+    >-</span>
+    <span
+      ng-click="rowVM.incrementPlaycount(rowVM.game.id)"
+      class="but-small"
+    >+</span>
   </div>
 </div>
