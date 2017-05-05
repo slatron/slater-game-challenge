@@ -1746,16 +1746,16 @@ a.but-selection {
   width: 20px; }
 
 .color-A {
-  background-color: yellow; }
+  background-color: #ffe67a; }
 
 .color-Z {
-  background-color: red; }
+  background-color: #ef6a6a; }
 
 .color-D {
-  background-color: green; }
+  background-color: #73bf73; }
 
 .color-M {
-  background-color: blue; }
+  background-color: #8b8bff; }
 
 .align-right {
   text-align: right; }

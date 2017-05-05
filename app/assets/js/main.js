@@ -12752,6 +12752,40 @@ constant('progressData', {
 });
 
 angular.module('Challenge').
+directive('errorMessages', ["pathsData", function(pathsData) {
+  'use strict';
+
+  return {
+    restrict: 'E',
+    scope: {
+      messages: '=',
+    },
+    controllerAs: 'errorMessagesVM',
+    bindToController: true,
+    replace: true,
+    templateUrl: [
+      pathsData.directives,
+      'error-messages/errorMessages.html'
+    ].join(''),
+
+    controller: ["$scope", function($scope) {
+      var vm = this;
+      vm.dismiss = dismiss;
+
+      $scope.$watchCollection(angular.bind(vm.messages, function() {
+        return vm.messages;
+      }), function(newVal) {
+        vm.messages = _.uniq(newVal);
+      });
+
+      function dismiss() {
+        vm.messages = [];
+      }
+    }],
+  };
+}]);
+
+angular.module('Challenge').
 directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
   firebaseAuthFactory,
   firebaseFactory,
@@ -12843,40 +12877,6 @@ directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", f
         });
       }
     },
-  };
-}]);
-
-angular.module('Challenge').
-directive('errorMessages', ["pathsData", function(pathsData) {
-  'use strict';
-
-  return {
-    restrict: 'E',
-    scope: {
-      messages: '=',
-    },
-    controllerAs: 'errorMessagesVM',
-    bindToController: true,
-    replace: true,
-    templateUrl: [
-      pathsData.directives,
-      'error-messages/errorMessages.html'
-    ].join(''),
-
-    controller: ["$scope", function($scope) {
-      var vm = this;
-      vm.dismiss = dismiss;
-
-      $scope.$watchCollection(angular.bind(vm.messages, function() {
-        return vm.messages;
-      }), function(newVal) {
-        vm.messages = _.uniq(newVal);
-      });
-
-      function dismiss() {
-        vm.messages = [];
-      }
-    }],
   };
 }]);
 
@@ -13108,7 +13108,7 @@ factory('firebaseAuthFactory', ["$firebaseAuth", function($firebaseAuth) {
 
   firebaseAuthObject.$onAuthStateChanged(function(user) {
     if (user) {
-      console.log(' ** USER is authorized **', user);
+      console.log(' ** USER is authorized **');
       status.authorized = true;
       status.email = user.email;
     } else {
