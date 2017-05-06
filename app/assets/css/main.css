@@ -1731,13 +1731,21 @@ a.but-selection {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
   width: 25%; }
-  .game-title > input {
+
+.title-area {
+  margin-left: 0.5em;
+  width: 100%; }
+  .title-area > input {
     width: 100%; }
+
+.player-icon {
+  border-radius: 7px;
+  background-color: #363636;
+  color: #fff;
+  display: inline-block;
+  font-weight: bold;
+  padding: 0.5em; }
 
 .controls > span {
   cursor: pointer;
@@ -1756,6 +1764,9 @@ a.but-selection {
 
 .color-M {
   background-color: #8b8bff; }
+
+.color-F {
+  background-color: #afdbff; }
 
 .align-right {
   text-align: right; }
@@ -1991,11 +2002,7 @@ a.but-selection {
   -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center; }
+          align-items: center; }
 
 .hidden {
   position: absolute !important;

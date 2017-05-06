@@ -20,13 +20,14 @@
       ng-click="gridVM.showLogin = !gridVM.showLogin"
       class="but-small float-right"
     >Login</button>
-    Slater 10x<span ng-bind="gridVM.board.times"></span> Challenge
+    <span ng-if="gridVM.board.times">
+      Slater 10x<span ng-bind="gridVM.board.times"></span> Challenge
+    </span>
     <select
       ng-model="gridVM.boardData.selected"
       ng-options="option for option in gridVM.boardData.options"
     ></select>
   </h4>
-
 
   <grid-row
     ng-repeat="(id, game) in gridVM.board"
