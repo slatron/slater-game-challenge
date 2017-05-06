@@ -12,11 +12,24 @@
 .game-title {
   padding: $base-unit-half;
   display: flex;
-  align-items: center;
   width: 25%;
+}
+
+.title-area {
+  margin-left: $base-unit-half;
+  width: 100%;
   > input {
-    width: 100%
+    width: 100%;
   }
+}
+
+.player-icon {
+  @include border-radius($base-rounded-corners);
+  background-color: $color-dkgrey;
+  color: $color-white;
+  display: inline-block;
+  font-weight: bold;
+  padding: $base-unit-half;
 }
 
 .controls {
@@ -44,4 +57,8 @@
 
 .color-M {
   background-color: #8b8bff;
+}
+
+.color-F {
+  background-color: #afdbff;
 }

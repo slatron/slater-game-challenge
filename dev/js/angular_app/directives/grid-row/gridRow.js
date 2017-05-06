@@ -19,6 +19,7 @@ directive('gridRow', function(
     ].join(''),
     controller: function($scope) {
       var vm = this;
+      vm.players = _.drop(vm.players);
 
       vm.status = firebaseAuthFactory.getStatus();
 
@@ -72,7 +73,9 @@ directive('gridRow', function(
       }
 
       function updatePlayer() {
-        firebaseFactory.saveData();
+        if (vm.game.player) {
+          firebaseFactory.saveData();
+        }
         vm.editPlayerMode = false;
       }
     }

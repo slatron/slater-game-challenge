@@ -1,9 +1,10 @@
 <div class="grid grid-row">
-  <div class="grid-col-single vertical-align-container color-{{rowVM.game.player}}">
-    <span
+  <div class="grid-col-triple vertical-align-container color-{{rowVM.game.player}} game-title">
+    <span class="player-icon"
       ng-click="rowVM.enterEditPlayerMode()"
       ng-bind="rowVM.game.player || '-'"
       ng-show="!rowVM.editPlayerMode"
+      ng-class="{'hand': rowVM.status.authorized}"
     ></span>
     <select
       ng-show="rowVM.editPlayerMode"
@@ -11,23 +12,19 @@
       ng-change="rowVM.updatePlayer()"
       ng-options="player for player in rowVM.players"
     ></select>
-  </div>
-
-  <div class="game-title grid-col-triple color-{{rowVM.game.player}}"
-    ng-bind="rowVM.game.title"
-    ng-click="rowVM.enterEditTitleMode()"
-    ng-class="{'hand': rowVM.status.authorized}"
-    ng-show="!rowVM.editTitleMode"
-  ></div>
-  <div
-    ng-show="rowVM.editTitleMode"
-    class="game-title grid-col-triple color-{{rowVM.game.player}}"
-  >
-    <input
-      ng-model="rowVM.game.title"
-      ng-change="rowVM.updateTitle()"
-      ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 1000, 'blur': 0 } }"
-    >
+    <div class="title-area"
+      ng-bind="rowVM.game.title"
+      ng-click="rowVM.enterEditTitleMode()"
+      ng-class="{'hand': rowVM.status.authorized}"
+      ng-show="!rowVM.editTitleMode"
+    ></div>
+    <div class="title-area" ng-show="rowVM.editTitleMode">
+      <input
+        ng-model="rowVM.game.title"
+        ng-change="rowVM.updateTitle()"
+        ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 1000, 'blur': 0 } }"
+      >
+    </div>
   </div>
 
   <div
