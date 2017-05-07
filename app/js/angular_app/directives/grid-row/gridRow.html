@@ -2,7 +2,7 @@
   <div class="grid-col-triple vertical-align-container color-{{rowVM.game.player}} game-title">
     <span class="player-icon"
       ng-click="rowVM.enterEditPlayerMode()"
-      ng-bind="rowVM.game.player || '-'"
+      ng-bind="rowVM.game.player"
       ng-show="!rowVM.editPlayerMode"
       ng-class="{'hand': rowVM.status.authorized}"
     ></span>
@@ -18,15 +18,22 @@
       ng-class="{'hand': rowVM.status.authorized}"
       ng-show="!rowVM.editTitleMode"
     ></div>
+    <div class="hand but-small"
+      ng-show="!rowVM.editTitleMode && rowVM.game.title.length === 0"
+      ng-click="rowVM.enterEditTitleMode()"
+    >add title</div>
     <div class="title-area" ng-show="rowVM.editTitleMode">
       <input
         ng-model="rowVM.game.title"
         ng-change="rowVM.updateTitle()"
-        ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 1000, 'blur': 0 } }"
+        ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 2000, 'blur': 0 } }"
       >
     </div>
+    <div class="hand but-small"
+      ng-show="rowVM.editTitleMode"
+      ng-click="rowVM.editTitleMode = false"
+    >done</div>
   </div>
-
   <div
     ng-repeat="box in rowVM.boxes track by $index"
     ng-click="rowVM.gotoPlayed($index + 1)"
