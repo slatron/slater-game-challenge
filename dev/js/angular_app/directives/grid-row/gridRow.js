@@ -36,7 +36,7 @@ directive('gridRow', function(
       _generateBoxes();
 
       $scope.$watch(function() {
-        return vm.game.played;
+        return vm.game;
       }, function() {
         _generateBoxes();
       });
@@ -44,7 +44,10 @@ directive('gridRow', function(
       function _generateBoxes() {
         vm.boxes = [];
         _.times(vm.times, function(idx) {
-          vm.boxes.push({played: vm.game.played > idx});
+          vm.boxes.push({
+            played: vm.game.played > idx,
+            last: (idx + 1) === vm.game.played
+          });
         });
       }
 
