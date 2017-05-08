@@ -12847,6 +12847,111 @@ directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", f
 }]);
 
 angular.module('Challenge').
+directive('errorMessages', ["pathsData", function(pathsData) {
+  'use strict';
+
+  return {
+    restrict: 'E',
+    scope: {
+      messages: '=',
+    },
+    controllerAs: 'errorMessagesVM',
+    bindToController: true,
+    replace: true,
+    templateUrl: [
+      pathsData.directives,
+      'error-messages/errorMessages.html'
+    ].join(''),
+
+    controller: ["$scope", function($scope) {
+      var vm = this;
+      vm.dismiss = dismiss;
+
+      $scope.$watchCollection(angular.bind(vm.messages, function() {
+        return vm.messages;
+      }), function(newVal) {
+        vm.messages = _.uniq(newVal);
+      });
+
+      function dismiss() {
+        vm.messages = [];
+      }
+    }],
+  };
+}]);
+
+angular.module('Challenge').
+directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", function(
+  pathsData,
+  firebaseAuthFactory,
+  firebaseFactory) {
+  'use strict';
+  return {
+    replace: true,
+    scope: {},
+    controllerAs: 'gridVM',
+    bindToController: true,
+    templateUrl: [
+      pathsData.directives,
+      'game-grid/gameGrid.html'
+    ].join(''),
+    controller: ["$scope", function($scope) {
+      var vm = this;
+      vm.board      = undefined;
+      vm.boardData  = firebaseFactory.getBoardData();
+      vm.boardReady = true;
+      vm.challenge  = firebaseFactory.followFirebaseRootObject();
+      vm.showLogin  = false;
+      vm.login      = login;
+      vm.logout     = logout;
+      vm.messages   = [];
+      vm.status     = firebaseAuthFactory.getStatus();
+      vm.user       = {
+        email: '',
+        password: ''
+      };
+
+      $scope.$watch(function() {
+        return vm.boardData.selected;
+      }, function(newVal) {
+        if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
+          vm.boardReady = false;
+          $scope.$applyAsync(function() {
+            vm.board = vm.challenge[newVal];
+            vm.boardReady = true;
+          });
+        }
+      });
+
+      $scope.$watch(function() {
+        return vm.challenge[vm.boardData.selected];
+      }, function(newVal) {
+        if (newVal) {
+          vm.board = newVal;
+        }
+      });
+
+      function login() {
+        firebaseAuthFactory.login(vm.user.email, vm.user.password)
+          .catch(function(error) {
+            vm.messages.push(error);
+          })
+          .finally(function() {
+            vm.showLogin = false;
+          });
+      }
+
+      function logout() {
+        firebaseAuthFactory.logout()
+          .catch(function(error) {
+            vm.messages.push(error);
+          });
+      }
+    }]
+  };
+}]);
+
+angular.module('Challenge').
 directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
   firebaseAuthFactory,
   firebaseFactory,
@@ -12867,6 +12972,7 @@ directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", fun
     ].join(''),
     controller: ["$scope", function($scope) {
       var vm = this;
+      console.log('game: ', vm.game);
 
       vm.status = firebaseAuthFactory.getStatus();
 
@@ -12932,14 +13038,6 @@ directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", fun
   };
 }]);
 
-angular.module('Challenge').
-factory('challengeFactory', function() {
-
-  var methods = {};
-
-  return methods;
-});
-
 /**
 *  This factory provides a common way for
 *    directives to store API response data
@@ -12998,6 +13096,14 @@ factory('cacheFactory', function() {
       return false;
     }
   }
+
+  return methods;
+});
+
+angular.module('Challenge').
+factory('challengeFactory', function() {
+
+  var methods = {};
 
   return methods;
 });
@@ -13208,103 +13314,3 @@ factory('urlParamsFactory', function() {
 
   return methods;
 });
-
-angular.module('Challenge').
-directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", function(
-  pathsData,
-  firebaseAuthFactory,
-  firebaseFactory) {
-  'use strict';
-  return {
-    replace: true,
-    scope: {},
-    controllerAs: 'gridVM',
-    bindToController: true,
-    templateUrl: [
-      pathsData.directives,
-      'game-grid/gameGrid.html'
-    ].join(''),
-    controller: ["$scope", function($scope) {
-      var vm = this;
-      vm.board     = undefined;
-      vm.boardData = firebaseFactory.getBoardData();
-      vm.challenge = firebaseFactory.followFirebaseRootObject();
-      vm.showLogin = false;
-      vm.login     = login;
-      vm.logout    = logout;
-      vm.messages  = [];
-      vm.status    = firebaseAuthFactory.getStatus();
-      vm.user      = {
-        email: '',
-        password: ''
-      };
-
-      $scope.$watch(function() {
-        return vm.boardData.selected;
-      }, function(newVal) {
-        if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
-          vm.board = vm.challenge[newVal];
-        }
-      });
-
-      $scope.$watch(function() {
-        return vm.challenge[vm.boardData.selected];
-      }, function(newVal) {
-        if (newVal) {
-          vm.board = newVal;
-        }
-      });
-
-      function login() {
-        firebaseAuthFactory.login(vm.user.email, vm.user.password)
-          .catch(function(error) {
-            vm.messages.push(error);
-          })
-          .finally(function() {
-            vm.showLogin = false;
-          });
-      }
-
-      function logout() {
-        firebaseAuthFactory.logout()
-          .catch(function(error) {
-            vm.messages.push(error);
-          });
-      }
-    }]
-  };
-}]);
-
-angular.module('Challenge').
-directive('errorMessages', ["pathsData", function(pathsData) {
-  'use strict';
-
-  return {
-    restrict: 'E',
-    scope: {
-      messages: '=',
-    },
-    controllerAs: 'errorMessagesVM',
-    bindToController: true,
-    replace: true,
-    templateUrl: [
-      pathsData.directives,
-      'error-messages/errorMessages.html'
-    ].join(''),
-
-    controller: ["$scope", function($scope) {
-      var vm = this;
-      vm.dismiss = dismiss;
-
-      $scope.$watchCollection(angular.bind(vm.messages, function() {
-        return vm.messages;
-      }), function(newVal) {
-        vm.messages = _.uniq(newVal);
-      });
-
-      function dismiss() {
-        vm.messages = [];
-      }
-    }],
-  };
-}]);
