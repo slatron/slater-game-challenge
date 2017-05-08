@@ -6,7 +6,7 @@ factory('firebaseFactory', function($firebaseObject) {
 
   var boardData = {
     options: ['-- SELECT BOARD --', 'family', 'parents'],
-    selected: '-- SELECT BOARD --'
+    selected: 'family'
   };
 
   methods.getBoardData = function() {
