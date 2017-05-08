@@ -37,9 +37,10 @@
   <div
     ng-repeat="box in rowVM.boxes track by $index"
     ng-click="rowVM.gotoPlayed($index + 1)"
+    ng-class="{'box-played color-{{rowVM.game.player}}': box.played, 'box-last': box.last}"
     class="box grid-col-single"
   >
-    <span ng-class="{'hidden': !box.played}">X</span>
+    <span ng-show="box.played">√</span>
   </div>
   <div
     ng-if="rowVM.status.authorized"

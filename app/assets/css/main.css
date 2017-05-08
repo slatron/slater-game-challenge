@@ -960,6 +960,7 @@ body,
 .but-import,
 .but,
 .nav-pills button,
+.box-played,
 .form-subheading {
   font-size: 14px; }
 
@@ -1724,6 +1725,13 @@ a.but-selection {
   padding: 0.5em;
   width: 3em;
   text-align: center; }
+
+.box-played {
+  text-align: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
 
 .game-title {
   padding: 0.5em;
