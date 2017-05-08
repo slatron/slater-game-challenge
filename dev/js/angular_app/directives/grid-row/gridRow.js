@@ -1,5 +1,6 @@
 angular.module('Challenge').
 directive('gridRow', function(
+  $timeout,
   firebaseAuthFactory,
   firebaseFactory,
   pathsData) {
@@ -19,8 +20,6 @@ directive('gridRow', function(
     ].join(''),
     controller: function($scope) {
       var vm = this;
-      console.log('game: ', vm.game);
-
       vm.status = firebaseAuthFactory.getStatus();
 
       vm.decrementPlaycount  = firebaseFactory.decrementPlaycount;
@@ -67,6 +66,9 @@ directive('gridRow', function(
       function enterEditPlayerMode() {
         if (vm.status.authorized) {
           vm.editPlayerMode = true;
+          $timeout(function() {
+            vm.editPlayerMode = false;
+          }, 5000);
         }
       }
 
