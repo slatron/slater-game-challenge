@@ -15,15 +15,16 @@ directive('gameGrid', function(
     ].join(''),
     controller: function($scope) {
       var vm = this;
-      vm.board     = undefined;
-      vm.boardData = firebaseFactory.getBoardData();
-      vm.challenge = firebaseFactory.followFirebaseRootObject();
-      vm.showLogin = false;
-      vm.login     = login;
-      vm.logout    = logout;
-      vm.messages  = [];
-      vm.status    = firebaseAuthFactory.getStatus();
-      vm.user      = {
+      vm.board      = undefined;
+      vm.boardData  = firebaseFactory.getBoardData();
+      vm.boardReady = false;
+      vm.challenge  = firebaseFactory.followFirebaseRootObject();
+      vm.showLogin  = false;
+      vm.login      = login;
+      vm.logout     = logout;
+      vm.messages   = [];
+      vm.status     = firebaseAuthFactory.getStatus();
+      vm.user       = {
         email: '',
         password: ''
       };
@@ -32,7 +33,11 @@ directive('gameGrid', function(
         return vm.boardData.selected;
       }, function(newVal) {
         if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
-          vm.board = vm.challenge[newVal];
+          vm.boardReady = false;
+          $scope.$applyAsync(function() {
+            vm.board = vm.challenge[newVal];
+            vm.boardReady = true;
+          });
         }
       });
 
