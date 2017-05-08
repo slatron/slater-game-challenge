@@ -17,7 +17,7 @@ directive('gameGrid', function(
       var vm = this;
       vm.board      = undefined;
       vm.boardData  = firebaseFactory.getBoardData();
-      vm.boardReady = false;
+      vm.boardReady = true;
       vm.challenge  = firebaseFactory.followFirebaseRootObject();
       vm.showLogin  = false;
       vm.login      = login;
