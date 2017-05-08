@@ -19,6 +19,7 @@ directive('gridRow', function(
     ].join(''),
     controller: function($scope) {
       var vm = this;
+      console.log('game: ', vm.game);
 
       vm.status = firebaseAuthFactory.getStatus();
 

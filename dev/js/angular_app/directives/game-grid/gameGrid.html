@@ -31,7 +31,7 @@
 
   <grid-row
     ng-repeat="(id, game) in gridVM.board"
-    ng-if="id !== 'times'"
+    ng-if="gridVM.boardReady && id !== 'times'"
     game="game"
     times="gridVM.board.times"
     players="gridVM.challenge.players"
