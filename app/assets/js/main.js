@@ -12752,6 +12752,40 @@ constant('progressData', {
 });
 
 angular.module('Challenge').
+directive('errorMessages', ["pathsData", function(pathsData) {
+  'use strict';
+
+  return {
+    restrict: 'E',
+    scope: {
+      messages: '=',
+    },
+    controllerAs: 'errorMessagesVM',
+    bindToController: true,
+    replace: true,
+    templateUrl: [
+      pathsData.directives,
+      'error-messages/errorMessages.html'
+    ].join(''),
+
+    controller: ["$scope", function($scope) {
+      var vm = this;
+      vm.dismiss = dismiss;
+
+      $scope.$watchCollection(angular.bind(vm.messages, function() {
+        return vm.messages;
+      }), function(newVal) {
+        vm.messages = _.uniq(newVal);
+      });
+
+      function dismiss() {
+        vm.messages = [];
+      }
+    }],
+  };
+}]);
+
+angular.module('Challenge').
 directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
   firebaseAuthFactory,
   firebaseFactory,
@@ -12847,40 +12881,6 @@ directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", f
 }]);
 
 angular.module('Challenge').
-directive('errorMessages', ["pathsData", function(pathsData) {
-  'use strict';
-
-  return {
-    restrict: 'E',
-    scope: {
-      messages: '=',
-    },
-    controllerAs: 'errorMessagesVM',
-    bindToController: true,
-    replace: true,
-    templateUrl: [
-      pathsData.directives,
-      'error-messages/errorMessages.html'
-    ].join(''),
-
-    controller: ["$scope", function($scope) {
-      var vm = this;
-      vm.dismiss = dismiss;
-
-      $scope.$watchCollection(angular.bind(vm.messages, function() {
-        return vm.messages;
-      }), function(newVal) {
-        vm.messages = _.uniq(newVal);
-      });
-
-      function dismiss() {
-        vm.messages = [];
-      }
-    }],
-  };
-}]);
-
-angular.module('Challenge').
 directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", function(
   pathsData,
   firebaseAuthFactory,
@@ -12952,7 +12952,8 @@ directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", fu
 }]);
 
 angular.module('Challenge').
-directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
+directive('gridRow', ["$timeout", "firebaseAuthFactory", "firebaseFactory", "pathsData", function(
+  $timeout,
   firebaseAuthFactory,
   firebaseFactory,
   pathsData) {
@@ -12972,8 +12973,6 @@ directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", fun
     ].join(''),
     controller: ["$scope", function($scope) {
       var vm = this;
-      console.log('game: ', vm.game);
-
       vm.status = firebaseAuthFactory.getStatus();
 
       vm.decrementPlaycount  = firebaseFactory.decrementPlaycount;
@@ -13020,6 +13019,9 @@ directive('gridRow', ["firebaseAuthFactory", "firebaseFactory", "pathsData", fun
       function enterEditPlayerMode() {
         if (vm.status.authorized) {
           vm.editPlayerMode = true;
+          $timeout(function() {
+            vm.editPlayerMode = false;
+          }, 5000);
         }
       }
 
