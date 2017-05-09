@@ -3,10 +3,10 @@ var gulp       = require('gulp'),
     concat     = require('gulp-concat-util'),
     ngAnnotate = require('gulp-ng-annotate'),
     gutil      = require('gulp-util'),
-    paths      = require('../config').paths,
-    getProdTag = require('../utils/getProdTag'),
-    tag        = getProdTag(),
-    prod       = tag.length ? true : false;
+    paths      = require('../config').paths;
+    // getProdTag = require('../utils/getProdTag'),
+    // tag        = getProdTag(),
+    // prod       = tag.length ? true : false;
 
 // concatenate and minify scripts
 gulp.task('scripts', function() {
@@ -24,6 +24,7 @@ gulp.task('scripts', function() {
         'dev/js/angular_base/jquery-ui.js',
         'dev/js/angular_base/angular.js',
         'dev/js/angular_base/moment.js',
+        paths.DEV_D3,
         paths.DEV_VENDOR,
         paths.DEV_JS_ENTRY,
         paths.DEV_JS_LOCAL,
@@ -31,12 +32,14 @@ gulp.task('scripts', function() {
       ],
       {base: 'dev/js'}
     )
-    .pipe(
-      prod ?
-        concat(paths.OUT_JS_FILENAME + '.' + tag + '.js') :
-        concat(paths.OUT_JS_FILENAME + '.js')
-    )
+    // .pipe(
+    //   prod ?
+    //     concat(paths.OUT_JS_FILENAME + '.' + tag + '.js') :
+    //     concat(paths.OUT_JS_FILENAME + '.js')
+    // )
+    .pipe(concat(paths.OUT_JS_FILENAME + '.js'))
     .pipe(ngAnnotate())
-    .pipe(prod ? uglify() : gutil.noop())
+    // .pipe(prod ? uglify() : gutil.noop())
+    .pipe(uglify())
     .pipe(gulp.dest(paths.APP_ASSETS_JS));
 });

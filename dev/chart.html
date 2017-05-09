@@ -1,0 +1,45 @@
+<!doctype html>
+<html ng-app="Challenge" ng-strict-di>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/css/main.min.css">
+  </head>
+
+  <body>
+    <div class="wrapper" id="chart">
+    </div>
+    <script src="assets/js/main.js"></script>
+    <script type="text/javascript">
+
+    var chart = c3.generate({
+      bindto: '#chart',
+      data: {
+        columns: [
+          ['data1', 30, 200, 100, 400, 150, 250],
+          ['data2', 130, 100, 140, 200, 150, 50]
+        ],
+        type: 'bar'
+      },
+      bar: {
+        width: {
+          ratio: 0.5
+        }
+      }
+    });
+
+    setTimeout(function () {
+      chart.load({
+        columns: [
+          ['data3', 130, -150, 200, 300, -200, 100]
+        ]
+      });
+    }, 1000);
+
+    </script>
+
+  </body>
+</html>

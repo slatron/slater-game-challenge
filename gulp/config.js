@@ -10,6 +10,7 @@ var config = {
     DEV_JS_LOCAL: 'dev/js/angular_app/**/*.js',
     DEV_STYLES: 'dev/scss/**/*.scss',
     DEV_EXCLUDE_UNIT_TESTS: '!**/*Spec.js',
+    DEV_D3: 'dev/js/vendor/d3/*.js',
     DEV_VENDOR: 'dev/js/vendor/*.js',
     OUT_JS_FILENAME: 'main',
     APP: 'app',

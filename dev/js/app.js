@@ -1,7 +1,11 @@
 angular.module('Challenge', [
   'firebase',
   'ngSanitize',
-  'ngCookies'])
+  'ngCookies',
+  // 'ngPromiseExtras'
+  // ui.select
+  // ui.sortable
+])
 .config(function($compileProvider) {
   var config = {
     apiKey: 'AIzaSyDR9at_rJgkb2JP5aUBO4qWdy19NoOmLrw',
