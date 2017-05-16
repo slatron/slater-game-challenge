@@ -19,9 +19,9 @@ factory('firebaseDataUtilsFactory', function() {
 
   methods.readDataOnce = function(location) {
     if (location) {
-      return db.ref('data/' + location).once('value');
+      return db.ref(location).once('value');
     } else {
-      return db.ref('data').once('value');
+      return db.ref().once('value');
     }
   };
 
