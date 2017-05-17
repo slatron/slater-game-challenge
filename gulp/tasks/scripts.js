@@ -40,6 +40,6 @@ gulp.task('scripts', function() {
     .pipe(concat(paths.OUT_JS_FILENAME + '.js'))
     .pipe(ngAnnotate())
     // .pipe(prod ? uglify() : gutil.noop())
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest(paths.APP_ASSETS_JS));
 });

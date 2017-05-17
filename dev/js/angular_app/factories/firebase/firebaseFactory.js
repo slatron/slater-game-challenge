@@ -9,6 +9,24 @@ factory('firebaseFactory', function($firebaseObject) {
     selected: 'family'
   };
 
+  methods.calculateGamesPerWeek = function() {
+    var completionDate = moment(new Date(challengeObject.data.completion[boardData.selected]));
+    var emptySlots = 0;
+    var times = challengeObject[boardData.selected].times;
+
+    // Replace each with reduce
+    _.each(challengeObject[boardData.selected], function(game) {
+      if (game.played !== undefined) {
+        emptySlots += (times - game.played);
+      }
+    });
+
+    // Replace with actual weeks comparison
+    var weeksLeft = completionDate.diff(moment(), 'weeks');
+
+    return emptySlots / weeksLeft;
+  };
+
   methods.getBoardData = function() {
     return boardData;
   };
