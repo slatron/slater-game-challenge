@@ -18,7 +18,19 @@
     <h2>Actions:</h2>
     <div ng-click="adminVM.showRegister = !adminVM.showRegister" class="hand">Register User</div>
     <div ng-click="adminVM.showUpdateEmail = !adminVM.showUpdateEmail" class="hand">Request Password Update</div>
-    <div ng-click="adminVM.openTimeForm()">
+    <div>
+      <label for="date">Completion Date:</label>
+      <select
+        ng-model="adminVM.boardData.selected"
+        ng-options="board for board in adminVM.boardData.options"
+      ></select>
+      <datepicker
+        date="adminVM.completionDate"
+      ></datepicker>
+      <button ng-click="adminVM.updateCompletionDate()">Update Completion Date</button>
+    </div>
+    <!--
+    <div>
       <label for="times">Update Number of Games Played</label>
       <input
         ng-model="adminVM.challenge.data.times"
@@ -26,6 +38,7 @@
         ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }"
         id="times" />
     </div>
+    -->
   </div>
   <div
     ng-show="!adminVM.status.authorized"

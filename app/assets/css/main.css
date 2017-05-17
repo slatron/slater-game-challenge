@@ -554,6 +554,7 @@ b em, em b, strong em, em strong {
 
 .text-small,
 table,
+.ui-datepicker-header,
 .controls > span,
 .description,
 .success-message {
@@ -564,6 +565,8 @@ p,
 html,
 body,
 .error-messages,
+.ui-datepicker-current,
+.ui-datepicker-close,
 .but-selection,
 .but-state,
 .but-small,
@@ -1039,6 +1042,84 @@ input:focus {
 .icon-disabled {
   color: #f0eeee; }
 
+body > .ui-datepicker {
+  display: none; }
+
+input[ui-date],
+input.hasDatepicker {
+  display: inline-block;
+  width: 90%; }
+
+.ui-datepicker-header {
+  color: #1484C8; }
+
+.ui-datepicker-prev {
+  cursor: pointer;
+  float: left;
+  font-family: "wellspringiconsregular"; }
+
+.ui-datepicker-title {
+  font-family: liberation_sansbold, sans-serif;
+  text-align: center; }
+
+.ui-datepicker-next {
+  cursor: pointer;
+  float: right;
+  font-family: "wellspringiconsregular"; }
+
+.ui-datepicker {
+  -webkit-box-shadow: 2px 2px 1px 0px rgba(121, 121, 121, 0.65);
+  box-shadow: 2px 2px 1px 0px rgba(121, 121, 121, 0.65);
+  background: #fff;
+  border: 1px solid #f0eeee;
+  padding: 0.5em; }
+
+.ui-datepicker th {
+  background: #fff;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  color: #83c1bf;
+  text-align: center; }
+
+.ui-datepicker td {
+  text-align: center;
+  padding: 0.25em; }
+
+.ui-datepicker td a {
+  color: #a1a1a1;
+  text-decoration: none;
+  width: 100%; }
+
+.ui-datepicker tbody tr:nth-child(even) {
+  background-color: #fff; }
+
+.ui-datepicker-trigger {
+  left: 4px;
+  position: relative;
+  top: 4px; }
+
+.ui-datepicker .ui-datepicker-today {
+  background: #f0eeee; }
+  .ui-datepicker .ui-datepicker-today a {
+    color: #222; }
+
+.ui-datepicker-buttonpane {
+  text-align: center; }
+
+.ui-datepicker-current,
+.ui-datepicker-close {
+  background: #1484C8;
+  color: #fff;
+  padding: 0.25em 0.5em;
+  min-width: 10px;
+  font-size: 0.7em;
+  margin-right: 0.5em; }
+  .ui-datepicker-current:hover,
+  .ui-datepicker-close:hover {
+    background-color: #83c1bf;
+    color: #fff; }
+
 .filled-box, .info-box,
 .rounded-box {
   border: 1px solid #1484C8;
@@ -1089,7 +1170,8 @@ input:focus {
       -ms-flex: 1;
           flex: 1; }
 
-.but-selection, .but-state, .but-small, .but-import,
+.ui-datepicker-current,
+.ui-datepicker-close, .but-selection, .but-state, .but-small, .but-import,
 .but {
   background: #f0eeee;
   border: none;
@@ -1101,12 +1183,15 @@ input:focus {
   text-align: center;
   text-decoration: none;
   border-radius: 7px; }
-  .active.but-selection, .active.but-state, .active.but-small, .active.but-import, .but-selection:active, .but-state:active, .but-small:active, .but-import:active,
+  .active.ui-datepicker-current,
+  .active.ui-datepicker-close, .active.but-selection, .active.but-state, .active.but-small, .active.but-import, .ui-datepicker-current:active,
+  .ui-datepicker-close:active, .but-selection:active, .but-state:active, .but-small:active, .but-import:active,
   .but.active,
   .but:active {
     background: #a1a1a1;
     color: #fff; }
-  .but-selection:hover, .but-state:hover, .but-small:hover, .but-import:hover,
+  .ui-datepicker-current:hover,
+  .ui-datepicker-close:hover, .but-selection:hover, .but-state:hover, .but-small:hover, .but-import:hover,
   .but:hover {
     background-color: #eef6f6;
     color: #222; }
