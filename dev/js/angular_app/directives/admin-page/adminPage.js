@@ -16,7 +16,7 @@ directive('adminPage', function(
       'admin-page/adminPage.html'
     ].join(''),
 
-    controller: function() {
+    controller: function($scope) {
       var vm = this;
 
       vm.status          = firebaseAuthFactory.getStatus();
@@ -33,6 +33,33 @@ directive('adminPage', function(
       vm.registerUser = registerUser;
       vm.login        = login;
       vm.logout       = logout;
+
+      vm.updateCompletionDate = updateCompletionDate;
+      vm.setCompletionDate = setCompletionDate;
+      vm.boardData    = firebaseFactory.getBoardData();
+
+      $scope.$watch(function() {
+        return vm.boardData.selected;
+      }, function() {
+        setCompletionDate();
+      });
+
+      function updateCompletionDate() {
+        if (!vm.challenge.data.completion) {
+          vm.challenge.data.completion = {};
+        }
+        vm.challenge.data.completion[vm.boardData.selected] = vm.completionDate;
+        firebaseFactory.saveData();
+      }
+
+      function setCompletionDate() {
+        if (vm.challenge &&
+            vm.challenge.data &&
+            vm.challenge.data.completion &&
+            vm.challenge.data.completion[vm.boardData.selected]) {
+          vm.completionDate = vm.challenge.data.completion[vm.boardData.selected];
+        }
+      }
 
       function _resetUser() {
         vm.user.email = '';
