@@ -23,8 +23,7 @@ factory('firebaseFactory', function($firebaseObject) {
 
     // Replace with actual weeks comparison
     var weeksLeft = completionDate.diff(moment(), 'weeks');
-
-    return emptySlots / weeksLeft;
+    return _.round(emptySlots / weeksLeft, 1);
   };
 
   methods.getBoardData = function() {
