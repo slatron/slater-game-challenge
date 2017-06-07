@@ -46,7 +46,8 @@ directive('gameGrid', function(
       }, function(newVal) {
         if (newVal) {
           vm.board = newVal;
-          vm.gamesPerWeek = firebaseFactory.calculateGamesPerWeek();
+          vm.gamesPerWeek  = firebaseFactory.getTimeLeftBy('weeks');
+          vm.gamesPerMonth = firebaseFactory.getTimeLeftBy('months');
         }
       });
 
