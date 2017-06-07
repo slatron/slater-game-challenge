@@ -9,22 +9,34 @@ factory('firebaseFactory', function($firebaseObject) {
     selected: 'family'
   };
 
-  methods.calculateGamesPerWeek = function() {
-    var completionDate = moment(new Date(challengeObject.data.completion[boardData.selected]));
+  // ==============================================================================================
+
+  function _getEmptySlots() {
     var emptySlots = 0;
     var times = challengeObject[boardData.selected].times;
 
-    // Replace each with reduce
+    // TODO: Refactor _.each to _.reduce
     _.each(challengeObject[boardData.selected], function(game) {
       if (game.played !== undefined) {
         emptySlots += (times - game.played);
       }
     });
+    return emptySlots;
+  }
 
-    // Replace with actual weeks comparison
-    var weeksLeft = completionDate.diff(moment(), 'weeks');
-    return _.round(emptySlots / weeksLeft, 1);
+  function _getCompletionDate() {
+    return moment(new Date(challengeObject.data.completion[boardData.selected]));
+  }
+
+  // ==============================================================================================
+
+  methods.getTimeLeftBy = function(by) {
+    var timeLeft = _getCompletionDate().diff(moment(), by);
+    timeLeft = by === 'months' ? ++timeLeft : timeLeft;
+    return _.round(_getEmptySlots() / timeLeft, 1);
   };
+
+  // ==============================================================================================
 
   methods.getBoardData = function() {
     return boardData;
@@ -48,6 +60,8 @@ factory('firebaseFactory', function($firebaseObject) {
     challengeObject[boardData.selected][gameId].played = times;
     methods.saveData();
   };
+
+  // ==============================================================================================
 
   methods.incrementPlaycount = function(gameId) {
     if (challengeObject[boardData.selected][gameId].played < challengeObject[boardData.selected].times) {
