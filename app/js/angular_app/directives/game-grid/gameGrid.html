@@ -37,5 +37,6 @@
     players="gridVM.challenge.players"
   ></grid-row>
 
-  <p>You must play {{gridVM.gamesPerWeek}} games per week to finish on time.</p>
+  <p ng-if="gridVM.gamesPerWeek">You must play {{gridVM.gamesPerWeek}} games per week to finish on time.</p>
+  <p ng-if="gridVM.gamesPerMonth">You must play {{gridVM.gamesPerMonth}} games per month to finish on time.</p>
 </div>

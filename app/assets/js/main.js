@@ -31119,6 +31119,60 @@ constant('progressData', {
 });
 
 angular.module('Challenge').
+directive('datepicker', ["pathsData", function(pathsData) {
+  'use strict';
+  return {
+    replace: true,
+    restrict: 'E',
+    scope: {
+      hideIcon: '=',
+      date: '='
+    },
+    controllerAs: 'datepickerVM',
+    bindToController: true,
+    templateUrl: [
+      pathsData.directives,
+      'datepicker/datepicker.html'
+    ].join(''),
+    controller: function() {
+      var vm = this;
+      if (!vm.date) {
+        vm.date = '';
+      }
+    },
+    link: function(scope, elem, attr) {
+      var vm = scope.datepickerVM;
+      var dateConfig = {
+        buttonImage: '/assets/images/icon-cal.svg',
+        buttonImageOnly: true,
+        buttonText: 'Select date',
+        changeMonth: true,
+        changeYear: true,
+        dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+        dateFormat: 'M d, yy',
+        nextText: 'Á',
+        prevText: 'Â',
+        showOn: 'both',
+        showButtonPanel: true,
+        closeText: 'Close'
+      };
+      if (vm.hideIcon) {
+        dateConfig.buttonImage     = null;
+        dateConfig.buttonImageOnly = null;
+        dateConfig.buttonText      = null;
+        dateConfig.showOn          = 'focus';
+      }
+      elem.datepicker(dateConfig).keydown(function(e) {
+        if (e.keyCode == 8 || e.keyCode == 46) {
+          $.datepicker._clearDate(this);
+          e.preventDefault();
+        }
+      });
+    }
+  };
+}]);
+
+angular.module('Challenge').
 directive('adminPage', ["firebaseAuthFactory", "firebaseFactory", "pathsData", function(
   firebaseAuthFactory,
   firebaseFactory,
@@ -31323,78 +31377,6 @@ directive('fireUtil', ["firebaseAuthFactory", "firebaseDataUtilsFactory", "paths
 }]);
 
 angular.module('Challenge').
-directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", function(
-  pathsData,
-  firebaseAuthFactory,
-  firebaseFactory) {
-  'use strict';
-  return {
-    replace: true,
-    scope: {},
-    controllerAs: 'gridVM',
-    bindToController: true,
-    templateUrl: [
-      pathsData.directives,
-      'game-grid/gameGrid.html'
-    ].join(''),
-    controller: ["$scope", function($scope) {
-      var vm = this;
-      vm.board      = undefined;
-      vm.boardData  = firebaseFactory.getBoardData();
-      vm.boardReady = true;
-      vm.challenge  = firebaseFactory.followFirebaseRootObject();
-      vm.showLogin  = false;
-      vm.login      = login;
-      vm.logout     = logout;
-      vm.messages   = [];
-      vm.status     = firebaseAuthFactory.getStatus();
-      vm.user       = {
-        email: '',
-        password: ''
-      };
-
-      $scope.$watch(function() {
-        return vm.boardData.selected;
-      }, function(newVal) {
-        if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
-          vm.boardReady = false;
-          $scope.$applyAsync(function() {
-            vm.board = vm.challenge[newVal];
-            vm.boardReady = true;
-          });
-        }
-      });
-
-      $scope.$watch(function() {
-        return vm.challenge[vm.boardData.selected];
-      }, function(newVal) {
-        if (newVal) {
-          vm.board = newVal;
-          vm.gamesPerWeek = firebaseFactory.calculateGamesPerWeek();
-        }
-      });
-
-      function login() {
-        firebaseAuthFactory.login(vm.user.email, vm.user.password)
-          .catch(function(error) {
-            vm.messages.push(error);
-          })
-          .finally(function() {
-            vm.showLogin = false;
-          });
-      }
-
-      function logout() {
-        firebaseAuthFactory.logout()
-          .catch(function(error) {
-            vm.messages.push(error);
-          });
-      }
-    }]
-  };
-}]);
-
-angular.module('Challenge').
 directive('gridRow', ["$timeout", "firebaseAuthFactory", "firebaseFactory", "pathsData", function(
   $timeout,
   firebaseAuthFactory,
@@ -31484,58 +31466,139 @@ directive('gridRow', ["$timeout", "firebaseAuthFactory", "firebaseFactory", "pat
 }]);
 
 angular.module('Challenge').
-directive('datepicker', ["pathsData", function(pathsData) {
+directive('gameGrid', ["pathsData", "firebaseAuthFactory", "firebaseFactory", function(
+  pathsData,
+  firebaseAuthFactory,
+  firebaseFactory) {
   'use strict';
   return {
     replace: true,
-    restrict: 'E',
-    scope: {
-      hideIcon: '=',
-      date: '='
-    },
-    controllerAs: 'datepickerVM',
+    scope: {},
+    controllerAs: 'gridVM',
     bindToController: true,
     templateUrl: [
       pathsData.directives,
-      'datepicker/datepicker.html'
+      'game-grid/gameGrid.html'
     ].join(''),
-    controller: function() {
+    controller: ["$scope", function($scope) {
       var vm = this;
-      if (!vm.date) {
-        vm.date = '';
-      }
-    },
-    link: function(scope, elem, attr) {
-      var vm = scope.datepickerVM;
-      var dateConfig = {
-        buttonImage: '/assets/images/icon-cal.svg',
-        buttonImageOnly: true,
-        buttonText: 'Select date',
-        changeMonth: true,
-        changeYear: true,
-        dayNamesMin: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-        dateFormat: 'M d, yy',
-        nextText: 'Á',
-        prevText: 'Â',
-        showOn: 'both',
-        showButtonPanel: true,
-        closeText: 'Close'
+      vm.board      = undefined;
+      vm.boardData  = firebaseFactory.getBoardData();
+      vm.boardReady = true;
+      vm.challenge  = firebaseFactory.followFirebaseRootObject();
+      vm.showLogin  = false;
+      vm.login      = login;
+      vm.logout     = logout;
+      vm.messages   = [];
+      vm.status     = firebaseAuthFactory.getStatus();
+      vm.user       = {
+        email: '',
+        password: ''
       };
-      if (vm.hideIcon) {
-        dateConfig.buttonImage     = null;
-        dateConfig.buttonImageOnly = null;
-        dateConfig.buttonText      = null;
-        dateConfig.showOn          = 'focus';
-      }
-      elem.datepicker(dateConfig).keydown(function(e) {
-        if (e.keyCode == 8 || e.keyCode == 46) {
-          $.datepicker._clearDate(this);
-          e.preventDefault();
+
+      $scope.$watch(function() {
+        return vm.boardData.selected;
+      }, function(newVal) {
+        if (newVal !== vm.boardData.options[0] && vm.challenge[newVal]) {
+          vm.boardReady = false;
+          $scope.$applyAsync(function() {
+            vm.board = vm.challenge[newVal];
+            vm.boardReady = true;
+          });
         }
       });
-    }
+
+      $scope.$watch(function() {
+        return vm.challenge[vm.boardData.selected];
+      }, function(newVal) {
+        if (newVal) {
+          vm.board = newVal;
+          vm.gamesPerWeek  = firebaseFactory.getTimeLeftBy('weeks');
+          vm.gamesPerMonth = firebaseFactory.getTimeLeftBy('months');
+        }
+      });
+
+      function login() {
+        firebaseAuthFactory.login(vm.user.email, vm.user.password)
+          .catch(function(error) {
+            vm.messages.push(error);
+          })
+          .finally(function() {
+            vm.showLogin = false;
+          });
+      }
+
+      function logout() {
+        firebaseAuthFactory.logout()
+          .catch(function(error) {
+            vm.messages.push(error);
+          });
+      }
+    }]
   };
 }]);
+
+/**
+*  This factory provides a common way for
+*    directives to store API response data
+*    for further calls on the page
+*/
+angular.module('Challenge').
+factory('cacheFactory', function() {
+
+  var pageCache = {},
+      methods   = {},
+      available = _storageAvailable();
+
+  // Store value to cache and localstorage
+  methods.set = function(key, value) {
+    if (_.isString(key)) {
+      pageCache[key] = value;
+      if (!_.isString(value)) {
+        value = angular.toJson(value);
+      }
+      if (available) {
+        localStorage.setItem(key, value);
+      }
+    }
+  };
+
+  methods.get = function(key) {
+    if (available && localStorage.getItem(key)) {
+      return angular.fromJson(localStorage.getItem(key));
+    } else if (pageCache[key]) {
+      return pageCache[key];
+    } else {
+      return null;
+    }
+  };
+
+  methods.getHash = function() {
+    return pageCache;
+  };
+
+  methods.clearLocalStorage = function() {
+    pageCache = {};
+    if (available) {
+      localStorage.clear();
+    }
+  };
+
+  // helper methods
+  function _storageAvailable() {
+    try {
+      var x = 'storage_test';
+      localStorage.setItem(x, x);
+      localStorage.removeItem(x);
+      return true;
+    }
+    catch (e) {
+      return false;
+    }
+  }
+
+  return methods;
+});
 
 angular.module('Challenge').
 factory('challengeFactory', function() {
@@ -31632,22 +31695,34 @@ factory('firebaseFactory', ["$firebaseObject", function($firebaseObject) {
     selected: 'family'
   };
 
-  methods.calculateGamesPerWeek = function() {
-    var completionDate = moment(new Date(challengeObject.data.completion[boardData.selected]));
+  // ==============================================================================================
+
+  function _getEmptySlots() {
     var emptySlots = 0;
     var times = challengeObject[boardData.selected].times;
 
-    // Replace each with reduce
+    // TODO: Refactor _.each to _.reduce
     _.each(challengeObject[boardData.selected], function(game) {
       if (game.played !== undefined) {
         emptySlots += (times - game.played);
       }
     });
+    return emptySlots;
+  }
 
-    // Replace with actual weeks comparison
-    var weeksLeft = completionDate.diff(moment(), 'weeks');
-    return _.round(emptySlots / weeksLeft, 1);
+  function _getCompletionDate() {
+    return moment(new Date(challengeObject.data.completion[boardData.selected]));
+  }
+
+  // ==============================================================================================
+
+  methods.getTimeLeftBy = function(by) {
+    var timeLeft = _getCompletionDate().diff(moment(), by);
+    timeLeft = by === 'months' ? ++timeLeft : timeLeft;
+    return _.round(_getEmptySlots() / timeLeft, 1);
   };
+
+  // ==============================================================================================
 
   methods.getBoardData = function() {
     return boardData;
@@ -31671,6 +31746,8 @@ factory('firebaseFactory', ["$firebaseObject", function($firebaseObject) {
     challengeObject[boardData.selected][gameId].played = times;
     methods.saveData();
   };
+
+  // ==============================================================================================
 
   methods.incrementPlaycount = function(gameId) {
     if (challengeObject[boardData.selected][gameId].played < challengeObject[boardData.selected].times) {
@@ -31795,68 +31872,6 @@ factory('urlParamsFactory', function() {
     sanitizedURL = location + urlParams;
     return sanitizedURL;
   };
-
-  return methods;
-});
-
-/**
-*  This factory provides a common way for
-*    directives to store API response data
-*    for further calls on the page
-*/
-angular.module('Challenge').
-factory('cacheFactory', function() {
-
-  var pageCache = {},
-      methods   = {},
-      available = _storageAvailable();
-
-  // Store value to cache and localstorage
-  methods.set = function(key, value) {
-    if (_.isString(key)) {
-      pageCache[key] = value;
-      if (!_.isString(value)) {
-        value = angular.toJson(value);
-      }
-      if (available) {
-        localStorage.setItem(key, value);
-      }
-    }
-  };
-
-  methods.get = function(key) {
-    if (available && localStorage.getItem(key)) {
-      return angular.fromJson(localStorage.getItem(key));
-    } else if (pageCache[key]) {
-      return pageCache[key];
-    } else {
-      return null;
-    }
-  };
-
-  methods.getHash = function() {
-    return pageCache;
-  };
-
-  methods.clearLocalStorage = function() {
-    pageCache = {};
-    if (available) {
-      localStorage.clear();
-    }
-  };
-
-  // helper methods
-  function _storageAvailable() {
-    try {
-      var x = 'storage_test';
-      localStorage.setItem(x, x);
-      localStorage.removeItem(x);
-      return true;
-    }
-    catch (e) {
-      return false;
-    }
-  }
 
   return methods;
 });

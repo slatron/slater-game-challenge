@@ -573,7 +573,7 @@ body,
 .but-import,
 .but,
 .nav-pills button,
-.box-played,
+.box,
 .form-subheading {
   font-size: 14px; }
 
@@ -1420,6 +1420,12 @@ a.but-selection {
   padding: 0.5em;
   width: 3em;
   text-align: center; }
+  @media (max-width: 37.5em) {
+    .box {
+      font-size: 12px;
+      height: 1.5em;
+      padding: 0;
+      width: 1em; } }
 
 .box-played {
   text-align: center;
@@ -1435,12 +1441,19 @@ a.but-selection {
   display: -ms-flexbox;
   display: flex;
   width: 25%; }
+  @media (max-width: 37.5em) {
+    .game-title {
+      font-size: 10.4px;
+      padding: 2px; } }
 
 .title-area {
   margin-left: 0.5em;
   width: 100%; }
   .title-area > input {
     width: 100%; }
+  @media (max-width: 37.5em) {
+    .title-area {
+      margin-left: none; } }
 
 .player-icon {
   border-radius: 7px;
@@ -1449,6 +1462,9 @@ a.but-selection {
   display: inline-block;
   font-weight: bold;
   padding: 0.5em; }
+  @media (max-width: 37.5em) {
+    .player-icon {
+      display: none; } }
 
 .controls > span {
   cursor: pointer;
