@@ -5,7 +5,7 @@ factory('firebaseFactory', function($firebaseObject) {
   var challengeObject = $firebaseObject(ref);
 
   var boardData = {
-    options: ['-- SELECT BOARD --', 'family'],
+    options: ['family'],
     selected: 'family'
   };
 
