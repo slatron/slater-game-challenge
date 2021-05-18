@@ -1,7 +1,7 @@
 {
   "name": "ms-cards",
   "version": "1.1.0",
-  "description": "Testing AngularJS Card Gams",
+  "description": "Slater 10x10 board",
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
@@ -30,15 +30,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wellspring-Worldwide/anavo-frontend.git"
+    "url": "https://github.com/slatron/slater-game-challenge"
   },
   "keywords": [
     "anavo"
   ],
-  "author": "Wellspring Worldwide",
+  "author": "Mike Slater",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Wellspring-Worldwide/anavo-frontend/issues"
-  },
-  "homepage": "https://github.com/Wellspring-Worldwide/anavo-frontend"
+  "homepage": "https://slatron.github.io/slater-game-challenge/app/index.html"
 }
